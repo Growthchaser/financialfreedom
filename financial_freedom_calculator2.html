@@ -1,0 +1,43 @@
+<script>
+    const levels = ["Financial Security", "Financial Vitality", "Financial Independence", "Financial Freedom", "Absolute Financial Freedom"];
+    const expenses = document.getElementById("expenses");
+
+    levels.forEach(level => {
+        const div = document.createElement("div");
+        div.className = "input-group";
+        const label = document.createElement("label");
+        label.textContent = `Monthly Income Needed for ${level}:`;
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = "0";
+        input.id = level.replace(/ /g, "-").toLowerCase();
+        div.append(label, input);
+        expenses.appendChild(div);
+    });
+
+    function calculate() {
+        const income = Number(document.getElementById("income").value);
+        const results = document.getElementById("results");
+        results.textContent = "";  // Clear previous results
+
+        let outputText = `Monthly Income from Investments: $${income}\n`;
+
+        levels.forEach(level => {
+            const expense = Number(document.getElementById(level.replace(/ /g, "-").toLowerCase()).value);
+            outputText += `Monthly Income Needed for ${level}: $${expense}\n`;
+
+            if (expense > income) {
+                const additionalInvestment = ((expense - income) / 0.07).toFixed(2);
+                results.textContent += `For ${level}, you need to invest an additional: $${additionalInvestment}\n`;
+                outputText += `For ${level}, you need to invest an additional: $${additionalInvestment}\n`;
+            }
+        });
+
+        // Export results to a text file
+        const blob = new Blob([outputText], {type: 'text/plain'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'financial_freedom_results.txt';
+        link.click();
+    }
+</script>
